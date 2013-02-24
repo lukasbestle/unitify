@@ -35,6 +35,8 @@ You can find more information on this here: <http://www.phpunit.de/manual/curren
 	You can also install an existing installation to a new path:
 	
 		$ unitify install PATH
+	
+	`Unitify` is a one-file binary without any library files and does not require anything but an installed `phpunit`. So you can basically install it everywhere in your `$PATH`.
 
 ### Contact
 
