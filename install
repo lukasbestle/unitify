@@ -1,0 +1,124 @@
+#!/usr/bin/env php
+?>
+<?php
+
+/**
+ * Unitify
+ * A CLI to run Unit tests and create code coverage reports using PHPUnit.
+ *
+ * Unitify installer
+ *
+ * @version 1.0
+ * @author Lukas Bestle <http://lu-x.me>
+ * @link https://github.com/vis7mac/unitify
+ * @copyright Copyright 2013 Lukas Bestle
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ */
+
+try {
+	// Welcome the user
+	echo "\033[0;34mWelcome to the \033[0;31munitify \033[34minstaller.\n\n";
+	
+	// Status: Downloading
+	echo "\033[0m\033[1mDownloading the \033[0;31munitify\033[0m\033[1m binary...\n";
+	
+	// Get the file
+	$contents = @file_get_contents('http://raw.github.com/vis7mac/unitify/master/unitify');
+	if($contents === false) fail("\033[0;31m!! Could not download \033[0;31munitify\033[0;31m.\n", false);
+	
+	// Randomize a filename
+	$filename = 'unitify.tmp';
+	do {
+		$filename .= rand(0, 9);
+	} while(is_file($filename));
+	
+	// Save the temporary file
+	if(@file_put_contents($filename, $contents) === false || !is_file($filename)) fail("\033[0;31m!! Could not write a temporary file.\n");
+	
+	// Status: Done
+	echo "  ==>\033[0;32m Done.\n\n";
+	
+	// Install the file
+	if(isset($argv[1])) {
+		if(is_dir($argv[1])) {
+			$installPath = realpath($argv[1]);
+		} else if(is_file($argv[1])) {
+			$installPath = realpath(dirname($argv[1]));
+		} else {
+			fail("\033[0;31m!! The directory \033[0;34m" . $argv[1] . "\033[0;31m does not exist.\n");
+		}
+	} else {
+		$installPath = DIRECTORY_SEPARATOR . 'usr' . DIRECTORY_SEPARATOR . 'local' . DIRECTORY_SEPARATOR . 'bin';
+	}
+	
+	echo "\033[0m\033[1mInstalling \033[0;31munitify\033[0;1m to \033[0;34m$installPath\033[0;1m...\n";
+	
+	if(!is_writable($installPath) || (is_file($installPath . DIRECTORY_SEPARATOR . 'unitify') && !is_writable($installPath . DIRECTORY_SEPARATOR . 'unitify'))) {
+		echo "\033[0;31mThe directory \033[0;34m" . $installPath . "\033[0;31m is not writable by your current user. You might need to enter your \033[0;34msudo\033[0;31m password:\n\033[0;35m";
+		
+		$output = array();
+		$returnval = -1;
+		exec('sudo cp ' . realpath($filename) . ' ' . $installPath . DIRECTORY_SEPARATOR . 'unitify; sudo chmod +x ' . $installPath . DIRECTORY_SEPARATOR . 'unitity 2>&1', $output, $returnval);
+		
+		if($returnval == 0) {
+			if(command_exists('unitify')) {
+				echo "\033[0m  ==>\033[0;32m Done.\n";
+			} else {
+				echo "\033[0m  ==>\033[0;31m Could write the file, but \033[0;34m$installPath\033[0;31m is not in your \033[0;34m\$PATH\033[0;31m yet.\n";
+			}
+		} else {
+			fail("\033[0m  ==>\033[0;31m Could not write the file.\n");
+		}
+	} else {
+		$output = array();
+		$returnval = -1;
+		exec('cp ' . realpath($filename) . ' ' . $installPath . DIRECTORY_SEPARATOR . 'unitify; chmod +x ' . $installPath . DIRECTORY_SEPARATOR . 'unitify 2>&1', $output, $returnval);
+		
+		if($returnval == 0) {
+			if(command_exists('unitify')) {
+				echo "\033[0m  ==>\033[0;32m Done.\n";
+			} else {
+				echo "\033[0m  ==>\033[0;31m Could write the file, but \033[0;34m$installPath\033[0;31m is not in your \033[0;34m\$PATH\033[0;31m yet.\n";
+			}
+		} else {
+			fail("\033[0m  ==>\033[0;31m Could not write the file.\n");
+		}
+	}
+	
+	removeTempFile();
+	
+	// ============================
+	// Result
+	// ============================
+	echo "\n\033[0;32mEverything worked as expected. YAY!\n";
+	exit(0);
+} catch(Exception $e) {
+	fail("\033[0;31m!! An error occured: {$e->getMessage()}.\n");
+}
+
+// ============================
+// Helpers
+// ============================
+function fail($string, $remove=true) {
+	echo $string;
+	
+	if($remove) removeTempFile();
+	exit(1);
+}
+
+function command_exists($cmd) {
+	$return = shell_exec("which $cmd");
+	return empty($return) ? false : true;
+}
+
+function removeTempFile() {
+	global $filename;
+	
+	echo "\n\033[0m\033[1mRemoving the temporary file...\n";
+	if(!@unlink($filename)) {
+		echo "\033[0;31m!! Could not delete the temporary file.\n";
+		exit(1);
+	}
+	
+	echo "  ==>\033[0;32m Done.\n";
+}
