@@ -260,19 +260,19 @@ exit(0);
 // Helpers
 // ============================
 function in_kirby() {
-	if(!is_file(getRoot() . DIRECTORY_SEPARATOR . 'phpunit.xml')) return false;
+	if(!is_file(getRoot(false) . DIRECTORY_SEPARATOR . 'phpunit.xml')) return false;
 	
-	return strstr(file_get_contents(getRoot() . DIRECTORY_SEPARATOR . 'phpunit.xml'), 'Kirby_Core') !== false;
+	return strstr(file_get_contents(getRoot(false) . DIRECTORY_SEPARATOR . 'phpunit.xml'), 'Kirby_Core') !== false;
 }
 
-function getRoot() {
+function getRoot($failable = true) {
 	if(defined('TESTING_ROOT')) return constant('TESTING_ROOT');
 	
 	$path = realpath('.');
 	while(!file_exists($path . DIRECTORY_SEPARATOR . 'phpunit.xml')) {
 		$path = realpath($path . DIRECTORY_SEPARATOR . '..');
 		
-		if($path === false || $path === DIRECTORY_SEPARATOR) fail("\033[0;31m!! There's no \033[0;34mphpunit.xml\033[0;31m file.\n");
+		if($path === false || $path === DIRECTORY_SEPARATOR && $failable) fail("\033[0;31m!! There's no \033[0;34mphpunit.xml\033[0;31m file.\n");
 	}
 	
 	define('TESTING_ROOT', $path);
