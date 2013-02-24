@@ -13,3 +13,6 @@
 ## v1.0.3
 * Fix broken root detection
 * `Unitify` is now named correctly in the CLI.
+
+## v1.0.4
++ Add updater

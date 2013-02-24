@@ -5,14 +5,14 @@
  * Unitify
  * A CLI to run Unit tests and create code coverage reports using PHPUnit.
  *
- * @version 1.0.3
+ * @version 1.0.4
  * @author Lukas Bestle <http://lu-x.me>
  * @link https://github.com/vis7mac/unitify
  * @copyright Copyright 2013 Lukas Bestle
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 
-$version = '1.0.3';
+$version = '1.0.4';
 
 if(in_kirby()) {
 	$kirbyrockmsg = "\n\033[0;32mThanks for helping developing \033[0;31mKirby\033[0;32m, you rock!";
@@ -238,6 +238,14 @@ switch($arguments['task']) {
 			}
 		}
 		break;
+	case 'update':
+		if(!internet_access()) fail("\033[0;31m!! You need an internet connection to do that. GitHub could be down as well.\n");
+		
+		echo "\033[0m\033[1mGetting and running the installation script...\n\n";
+		
+		passthru('php -r "$(curl -fsSkL raw.github.com/vis7mac/unitify/master/install)" ' . __FILE__ . ' 2>&1', $returnval);
+		
+		exit($returnval);
 	default:
 		echo "\033[0;31m!! There's no task named \033[0;34m" . $arguments['task'] . "\033[0;31m.\n\n";
 	case '':
@@ -248,6 +256,7 @@ switch($arguments['task']) {
 			echo "  \033[0;34mtest     \033[0;33m[-d]\033[0m          Runs Unit Tests using PHPUnit.\n                           \033[0;33m-d\033[0m or \033[0;33m--details\033[0m: Verbose output\n";
 			echo "  \033[0;34mreport   \033[0;33m[PATH] [-f]\033[0m   Creates a code coverage report in HTML format and saves it to \033[0;34mreport/\033[0m.\n                           \033[0;33mPATH\033[0m: Change the path to write the report to.\n                           \033[0;33m-f\033[0m or \033[0;33m--force\033[0m: Overwrite existing directories.\n";
 			echo "  \033[0;34minstall  \033[0;33m[PATH]\033[0m        Installs \033[0;31mUnitify\033[0m to \033[0;34m/usr/local/bin/\033[0m or \033[0;33mPATH\033[0m.\n                           \033[0;33mPATH\033[0m: Change the path to write the \033[0;31munitify\033[0m 'binary' to.\n";
+			echo "  \033[0;34mupdate   \033[0;33m\033[0m              Updates the current \033[0;31mUnitify\033[0m installation at \033[0;34m" . __FILE__ . "\033[0m.\n";
 }
 
 // ============================
@@ -339,4 +348,18 @@ function fail($text) {
 	echo $text;
 	
 	exit(1);
+}
+
+function internet_access() {
+	$socket = @fsockopen("www.github.com", 80);
+	
+	if ($socket) {
+		$connected = true;
+	  
+		fclose($socket);
+	} else {
+		$connected = false;
+	}
+	
+	return $connected;
 }

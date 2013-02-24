@@ -17,14 +17,14 @@
 
 try {
 	// Welcome the user
-	echo "\033[0;34mWelcome to the \033[0;31munitify \033[34minstaller.\n\n";
+	echo "\033[0;34mWelcome to the \033[0;31mUnitify \033[34minstaller.\n\n";
 	
 	// Status: Downloading
-	echo "\033[0m\033[1mDownloading the \033[0;31munitify\033[0m\033[1m binary...\n";
+	echo "\033[0m\033[1mDownloading the \033[0;31mUnitify\033[0m\033[1m binary...\n";
 	
 	// Get the file
 	$contents = @file_get_contents('http://raw.github.com/vis7mac/unitify/master/unitify');
-	if($contents === false) fail("\033[0;31m!! Could not download \033[0;31munitify\033[0;31m.\n", false);
+	if($contents === false) fail("\033[0;31m!! Could not download \033[0;31mUnitify\033[0;31m.\n", false);
 	
 	// Randomize a filename
 	$filename = 'unitify.tmp';
@@ -51,7 +51,7 @@ try {
 		$installPath = DIRECTORY_SEPARATOR . 'usr' . DIRECTORY_SEPARATOR . 'local' . DIRECTORY_SEPARATOR . 'bin';
 	}
 	
-	echo "\033[0m\033[1mInstalling \033[0;31munitify\033[0;1m to \033[0;34m$installPath\033[0;1m...\n";
+	echo "\033[0m\033[1mInstalling \033[0;31mUnitify\033[0;1m to \033[0;34m$installPath\033[0;1m...\n";
 	
 	if(!is_writable($installPath) || (is_file($installPath . DIRECTORY_SEPARATOR . 'unitify') && !is_writable($installPath . DIRECTORY_SEPARATOR . 'unitify'))) {
 		echo "\033[0;31mThe directory \033[0;34m" . $installPath . "\033[0;31m is not writable by your current user. You might need to enter your \033[0;34msudo\033[0;31m password:\n\033[0;35m";
