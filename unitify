@@ -15,10 +15,13 @@
 $version = '1.0.2';
 
 if(in_kirby()) {
-	$rockmsg = (on_travis())? "\n\033[0;32mThanks Travis CI for this great service, you rock!" : "\n\033[0;32mThanks for helping developing \033[0;31mKirby\033[0;32m, you rock!";
+	$kirbyrockmsg = "\n\033[0;32mThanks for helping developing \033[0;31mKirby\033[0;32m, you rock!";
 } else {
-	$rockmsg = '';
+	$kirbyrockmsg = '';
 }
+
+$rockmsg = (on_travis())? "\n\033[0;32mThanks Travis CI for this great service, you rock!" : $kirbyrockmsg;
+
 echo "\033[0;34mWelcome to \033[0;31munitify \033[0;36mv$version\033[0;34m.\033[0m$rockmsg\n\n\033[0m";
 
 // ============================
