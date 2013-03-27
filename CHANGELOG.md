@@ -16,3 +16,7 @@
 
 ## v1.0.4
 + Add updater
+
+## v1.0.5
+* Fix behavior when using or installing from a path with spaces in it
+* Fix typo

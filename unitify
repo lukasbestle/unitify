@@ -5,14 +5,14 @@
  * Unitify
  * A CLI to run Unit tests and create code coverage reports using PHPUnit.
  *
- * @version 1.0.4
+ * @version 1.0.5
  * @author Lukas Bestle <http://lu-x.me>
  * @link https://github.com/vis7mac/unitify
  * @copyright Copyright 2013 Lukas Bestle
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 
-$version = '1.0.4';
+$version = '1.0.5';
 
 if(in_kirby()) {
 	$kirbyrockmsg = "\n\033[0;32mThanks for helping developing \033[0;31mKirby\033[0;32m, you rock!";
