@@ -8,7 +8,7 @@
  *
  * Unitify installer
  *
- * @version 1.0
+ * @version 1.0.1
  * @author Lukas Bestle <http://lu-x.me>
  * @link https://github.com/vis7mac/unitify
  * @copyright Copyright 2013 Lukas Bestle
@@ -58,7 +58,7 @@ try {
 		
 		$output = array();
 		$returnval = -1;
-		exec('sudo cp ' . realpath($filename) . ' ' . $installPath . DIRECTORY_SEPARATOR . 'unitify; sudo chmod +x ' . $installPath . DIRECTORY_SEPARATOR . 'unitity 2>&1', $output, $returnval);
+		exec('sudo cp ' . escapeshellarg(realpath($filename)) . ' ' . escapeshellarg($installPath . DIRECTORY_SEPARATOR . 'unitify') . '; sudo chmod +x ' . $installPath . DIRECTORY_SEPARATOR . 'unitity 2>&1', $output, $returnval);
 		
 		if($returnval == 0) {
 			if(command_exists('unitify')) {
@@ -72,7 +72,7 @@ try {
 	} else {
 		$output = array();
 		$returnval = -1;
-		exec('cp ' . realpath($filename) . ' ' . $installPath . DIRECTORY_SEPARATOR . 'unitify; chmod +x ' . $installPath . DIRECTORY_SEPARATOR . 'unitify 2>&1', $output, $returnval);
+		exec('cp ' . escapeshellarg(realpath($filename)) . ' ' . escapeshellarg($installPath . DIRECTORY_SEPARATOR . 'unitify') . '; chmod +x ' . $installPath . DIRECTORY_SEPARATOR . 'unitify 2>&1', $output, $returnval);
 		
 		if($returnval == 0) {
 			if(command_exists('unitify')) {
