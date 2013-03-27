@@ -169,7 +169,7 @@ switch($arguments['task']) {
 		
 		echo "\033[0m\033[1mGenerating a code coverage report to \033[0;34m" . $reportPath . "\033[0m\033[1m...\nThis might take a while or two. :)\n";
 		
-		$result = phpunit("--coverage-html $reportPath");
+		$result = phpunit("--coverage-html " . escapeshellarg($reportPath));
 		
 		if(strpos($result['output'], "Generating code coverage report in HTML format ... done") === false || !file_exists($reportPath . DIRECTORY_SEPARATOR . 'index.html')) {
 			fail("  ==>\033[0;31m Could not generate a code coverage report.\n");
@@ -182,7 +182,7 @@ switch($arguments['task']) {
 			
 			$output = array();
 			$returnval = -1;
-			exec("open $reportPath" . DIRECTORY_SEPARATOR . "index.html 2>&1", $output, $returnval);
+			exec("open " . escapeshellarg($reportPath) . DIRECTORY_SEPARATOR . "index.html 2>&1", $output, $returnval);
 			
 			if($returnval == 0) {
 				echo "  ==>\033[0;32m Done.\n";
@@ -316,7 +316,7 @@ function phpunit($args = '') {
 	$output = array();
 	$returnval = -1;
 	
-	exec("cd $path;phpunit " . $args . "2>&1", $output, $returnval);
+	exec("cd " . escapeshellarg($path) . ";phpunit " . $args . "2>&1", $output, $returnval);
 	
 	return array('output' => implode("\n", $output), 'returnval' => $returnval);
 }
