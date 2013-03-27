@@ -58,7 +58,7 @@ foreach(array_slice($argv, 1) as $argument) {
 // Check if CLI is installed
 // ============================
 if(strpos(__FILE__, "test" . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR) !== false && $arguments['task'] != 'install' && !on_travis()) {
-	echo "\033[0;31m!\033[0;34m You can install \033[0;31mUnitify\033[0;34m to make it available globally using\n    Unitify install\n\n";
+	echo "\033[0;31m!\033[0;34m You can install \033[0;31mUnitify\033[0;34m to make it available globally using\n    unitify install\n\n";
 }
 
 // ============================
