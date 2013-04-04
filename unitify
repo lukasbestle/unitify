@@ -129,7 +129,7 @@ switch($arguments['task']) {
 			
 			echo "\033[0m  " . str_replace("\n", "\n  ", $results['output']) . "\n";
 			
-			exit(1);
+			exit($results['returnval']);
 		}
 		break;
 	case 'report':
