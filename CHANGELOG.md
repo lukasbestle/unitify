@@ -20,3 +20,6 @@
 ## v1.0.5
 * Fix behavior when using or installing from a path with spaces in it
 * Fix typo
+
+## v1.0.6
+* Returns the result code returned from PHPUnit on hard failure
