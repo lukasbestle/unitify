@@ -5,14 +5,14 @@
  * Unitify
  * A CLI to run Unit tests and create code coverage reports using PHPUnit.
  *
- * @version 1.0.6
+ * @version 1.0.7
  * @author Lukas Bestle <http://lu-x.me>
  * @link https://github.com/vis7mac/unitify
  * @copyright Copyright 2013 Lukas Bestle
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 
-$version = '1.0.6';
+$version = '1.0.7';
 
 if(in_kirby()) {
 	$kirbyrockmsg = "\n\033[0;32mThanks for helping developing \033[0;31mKirby\033[0;32m, you rock!";
@@ -44,9 +44,11 @@ foreach(array_slice($argv, 1) as $argument) {
 	if(substr($argument, 0, 1) == '-') {
 		if(substr($argument, 0, 2) == '--') $argument = '-' . substr($argument, 2, 1);
 		
-		if(in_array($toggle = substr($argument, 1), $arguments['toggles'])) continue;
-		
-		$arguments['toggles'][] = $toggle;
+		foreach(str_split(substr($argument, 1)) as $toggle) {
+			if(in_array($toggle, $arguments['toggles'])) continue;
+			
+			$arguments['toggles'][] = $toggle;
+		}
 	} else if($arguments['task'] === null) {
 		$arguments['task'] = $argument;
 	} else {
@@ -131,6 +133,30 @@ switch($arguments['task']) {
 			
 			exit($results['returnval']);
 		}
+		
+		// Generate code coverage report
+		if(in_array('r', $arguments['toggles'])) {
+			if(!function_exists('xdebug_enable')) {
+				fail("\033[0;31m!! You don't have \033[0;32mXdebug\033[0;31m installed. \033[0;32mXdebug\033[0;31m is a requirement to create code coverage reports.\n   You can get it from here:\n     \033[0;34mhttp://xdebug.org/download.php\n");
+			}
+			
+			echo "\n\033[0m\033[1mGenerating a \033[0;32mClover\033[0m\033[1m report...\n";
+			
+			@unlink('clover.xml');
+			
+			$results = phpunit("--coverage-clover clover.xml");
+			
+			if(file_exists('clover.xml')) {
+				echo "\033[0m  ==>\033[32m Done.\n";
+			} else if($results['returnval'] != 0) {
+				echo "\033[0m  ==>\033[0;31m Something went wrong. PHPUnit exited with status code \033[0;34m{$results['returnval']}\033[0;31m.\n";
+				exit($results['returnval']);
+			} else {
+				echo "\033[0m  ==>\033[0;31m Something went wrong. PHPUnit exited with status code \033[0;34m0\033[0;31m but did not write a file.\n";
+				exit($results['returnval']);
+			}
+		}
+		
 		break;
 	case 'report':
 		// Generate code coverage report
@@ -253,7 +279,7 @@ switch($arguments['task']) {
 		// Home screen -> help
 			echo "\033[0m\033[1mUsage: \033[0;31munitify \033[0;34m<command>\033[0m\n\nwhere \033[0;34m<command>\033[0m is one of:\n\n";
 	
-			echo "  \033[0;34mtest     \033[0;33m[-d]\033[0m          Runs Unit Tests using PHPUnit.\n                           \033[0;33m-d\033[0m or \033[0;33m--details\033[0m: Verbose output\n";
+			echo "  \033[0;34mtest     \033[0;33m[-d] [-r]\033[0m     Runs Unit Tests using PHPUnit.\n                           \033[0;33m-d\033[0m or \033[0;33m--details\033[0m: Verbose output\n                           \033[0;33m-r\033[0m or \033[0;33m--report\033[0m: Generate a Clover report as clover.xml\n";
 			echo "  \033[0;34mreport   \033[0;33m[PATH] [-f]\033[0m   Creates a code coverage report in HTML format and saves it to \033[0;34mreport/\033[0m.\n                           \033[0;33mPATH\033[0m: Change the path to write the report to.\n                           \033[0;33m-f\033[0m or \033[0;33m--force\033[0m: Overwrite existing directories.\n";
 			echo "  \033[0;34minstall  \033[0;33m[PATH]\033[0m        Installs \033[0;31mUnitify\033[0m to \033[0;34m/usr/local/bin/\033[0m or \033[0;33mPATH\033[0m.\n                           \033[0;33mPATH\033[0m: Change the path to write the \033[0;31munitify\033[0m 'binary' to.\n";
 			echo "  \033[0;34mupdate   \033[0;33m\033[0m              Updates the current \033[0;31mUnitify\033[0m installation at \033[0;34m" . __FILE__ . "\033[0m.\n";

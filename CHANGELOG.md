@@ -23,3 +23,7 @@
 
 ## v1.0.6
 * Returns the result code returned from PHPUnit on hard failure
+
+## v1.0.7
++ Toggles can be combined (for example `-dr` instead of `-d -r`)
++ Generate Clover XML-files when testing (`test -r`)
